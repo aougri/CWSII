@@ -104,9 +104,9 @@ def login():
     print_logo()
     print("Logging in...", end="\n")
     driver.get("https://vendor.choicehomewarranty.com/index.php?sec=cadsavail")
-    driver.find_element_by_name("email").send_keys("Hvac5218@gmail.com")
-    driver.find_element_by_name("password").send_keys("bradkin525")
-    driver.find_element_by_name("Submit").click()
+    driver.find_element("name","email").send_keys("Hvac5218@gmail.com")
+    driver.find_element("name","password").send_keys("bradkin525")
+    driver.find_element("name","Submit").click()
     time.sleep(5)
 
 
@@ -118,31 +118,32 @@ def windowSwitch(windowIndex):
 
 
 def rowCount():
-    rows = driver.find_elements_by_xpath('//*[@id="availOrders"]/tbody/tr')
-    if len(rows) == 0:
+    rows = driver.find_elements("xpath",'//*[@id="availOrders"]/tbody/tr')
+    if len(rows):
         print("There are no job listings at the moment, quitting... \n")
         driver.quit()
+        return 0;
 
     else:
         return rows
 
 
 def getSWO(i):
-    swo = driver.find_element_by_xpath(
+    swo = driver.find_element("xpath",
         f'//*[@id="availOrders"]/tbody/tr[{i}]/td[1]'
     ).text
     return swo
 
 
 def getJobType(i):
-    job_type = driver.find_element_by_xpath(
+    job_type = driver.find_element("xpath",
         f'//*[@id="availOrders"]/tbody/tr[{i}]/td[2]'
     ).text
     return job_type
 
 
 def getLocation(i):
-    location = driver.find_element_by_xpath(
+    location = driver.find_element("xpath",
         f'//*[@id="availOrders"]/tbody/tr[{i}]/td[3]'
     ).text
     return location
@@ -151,7 +152,7 @@ def getLocation(i):
 def count():    
     rows = rowCount()
 
-    for i in range(1, len(rows)):
+    for i in range(1, len(rows) + 1):
         swo = getSWO(i)
         job = getJobType(i)
         fulllocation = getLocation(i)
@@ -166,7 +167,7 @@ def count():
             if res == False:
 
                 print("Found a job at: " + fulllocation)
-                driver.find_element_by_xpath(
+                driver.find_element("xpath",
                     f'//*[@id="availOrders"]/tbody/tr[{i}]/td[4]/a'
                 ).click()
                 driver.find_element_by_class_name("accept").click()
